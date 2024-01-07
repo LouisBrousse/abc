@@ -19,70 +19,96 @@ app.use(sessionMiddleware)
 
 let password = null
 let sessionid = null
-let sessionida = ''
-let sessionidb = ''
-let sessionidc = ''
+let sessionacces = null
+
 let message = ''
 
 
 // Home page
 app.get('/', (req, res) => {
+    console.log('je passe dans /')
     res.render('choixporte')
  })
 
+ app.get('/validateSessiona', function(req, res){
+    console.log('je passe dans /validateSessiona')
+    //récupérer l'ID de Session
+    sessionid = req?.session.id
+    console.log('sessionid', sessionid)
+    //récuoérer la liste d'acces
+    sessionacces = req?.session.accesgranted
+    if (sessionid !== null && sessionacces.includes('a')){
+        message = 'Accès déjà accordé à A'
+        res.render('ina', {message})
+    }else {
+        res.redirect('/portea')
+    }
+    })
+
+app.get('/validateSessionb', function(req, res){
+    console.log('je passe dans /validateSessionb')
+    //récupérer l'ID de Session
+    sessionid = req?.session.id
+    console.log('sessionid', sessionid)
+    //récuoérer la liste d'acces
+    sessionacces = req?.session.accesgranted
+    if (sessionid !== null && sessionacces.includes('b')){
+        message = 'Accès déjà accordé à B'
+        res.render('inb', {message})
+    }else {
+        res.redirect('/porteb')
+    }
+    })
+
+app.get('/validateSessionc', function(req, res){
+    console.log('je passe dans /validateSessionc')
+    //récupérer l'ID de Session
+    sessionid = req?.session.id
+    console.log('sessionid', sessionid)
+    //récuoérer la liste d'acces
+    sessionacces = req?.session.accesgranted
+    if (sessionid !== null && sessionacces.includes('c')){
+        message = 'Accès déjà accordé à C'
+        res.render('inc', {message})
+    }else {
+        res.redirect('/portec')
+    }
+    })
+
+
+
  // portea page
  app.get('/portea', (req, res) => {
+    console.log('je passe dans /portea')
     res.render('portea')
  })
 
   // porteb page
   app.get('/porteb', (req, res) => {
+    console.log('je passe dans /porteb')
     res.render('porteb')
  })
 
   // portec page
   app.get('/portec', (req, res) => {
+    console.log('je passe dans /portec')
     res.render('portec')
  })
 
- app.get('/validateSessiona', function(request, response){
-    if (sessionid === sessionida){
-        message = 'Accès déjà accordé à A'
-        response.render('ina', {message})
-    }else{
-        response.redirect('/portea')
-    } 
-})
-
-app.get('/validateSessionb', function(request, response){
-    if (sessionid === sessionidb){
-        message = 'Accès déjà accordé à B'
-        response.render('inb', {message})
-    }else{
-        response.redirect('/porteb')
-    } 
-})
-
-app.get('/validateSessionc', function(request, response){
-    if (sessionid === sessionidc){
-        message = 'Accès déjà accordé à C'
-        response.render('inc', {message})
-    }else{
-        response.redirect('/portec')
-    } 
-})
-
-
 app.post('/validatePassworda', function(request, response){
+    console.log('je passe dans /validatePassworda')
     // Récupérer la valeur du champ de saisie du mot de passe
     password = request.body.passworda;
     //récupérer l'ID de Session
     sessionid = request?.session.id
+    console.log('sessionid', sessionid)
+    //récuoérer la liste d'acces
+    sessionacces = request?.session.accesgranted
     // contrôle du password
     if (password === 'aaa') {
         // si ok?
-        sessionida = sessionid
-        message = 'Accès accordé à A'
+        sessionacces.push('a')
+        message = ('Accès accordé à A', console.log(sessionacces))
         response.render('ina', {message});
     } else {
         response.send('mot de passe incorrect. Veuillez réessayer!')
@@ -90,15 +116,19 @@ app.post('/validatePassworda', function(request, response){
 })
 
 app.post('/validatePasswordb', function(request, response){
+    console.log('je passe dans /validatePasswordb')
     // Récupérer la valeur du champ de saisie du mot de passe
     password = request.body.passwordb;
     //récupérer l'ID de Session
     sessionid = request?.session.id
+    console.log('sessionid', sessionid)
+    //récuoérer la liste d'acces
+    sessionacces = request?.session.accesgranted
     // contrôle du password
     if (password === 'bbb') {
         // si ok?
-        sessionidb = sessionid
-        message = 'Accès accordé à B'
+        sessionacces.push('b')
+        message = ('Accès accordé à B', console.log(sessionacces))
         response.render('inb', {message});
     } else {
         response.send('mot de passe incorrect. Veuillez réessayer!')
@@ -106,15 +136,19 @@ app.post('/validatePasswordb', function(request, response){
 })
 
 app.post('/validatePasswordc', function(request, response){
+    console.log('je passe dans /validatePasswordc')
     // Récupérer la valeur du champ de saisie du mot de passe
     password = request.body.passwordc;
     //récupérer l'ID de Session
     sessionid = request?.session.id
+    console.log('sessionid', sessionid)
+    //récuoérer la liste d'acces
+    sessionacces = request?.session.accesgranted
     // contrôle du password
     if (password === 'ccc') {
         // si ok?
-        sessionidc = sessionid
-        message = 'Accès accordé à C'
+        sessionacces.push('c')
+        message = ('Accès accordé à C', console.log(sessionacces))
         response.render('inc', {message});
     } else {
         response.send('mot de passe incorrect. Veuillez réessayer!')
@@ -128,16 +162,16 @@ app.post('/validatePasswordc', function(request, response){
     res.render('ina')
  })
 
- // porteb page
+ // portea page
  app.get('/inb', (req, res) => {
     res.render('inb')
  })
 
-  // portec page
+  // portea page
   app.get('/inc', (req, res) => {
     res.render('inc')
  })
-                    
+          
 app.listen(3000, function() {
     console.log('listening to port 3000')
  })

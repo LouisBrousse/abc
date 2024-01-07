@@ -21,12 +21,10 @@ export function sessionMiddleware(req, res, next) {
          id: sessionId,
          start: now,
          end: now,
+         accesgranted: [],
       }
       // send cookie to client
-      res.cookie('sessionId', sessionId, { 
-         sameSite: 'None', 
-         secure: true 
-      })
+      res.cookie('sessionId', sessionId)
       // attach session to req.session
       req.session = sessions[sessionId]
    }
